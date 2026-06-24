@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>潛水人｜一站式潛水服務平台 MVP</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#home" data-view="home" aria-label="回到首頁">
+        <span class="brand-mark">潛</span>
+        <span>
+          <strong>潛水人</strong>
+          <small>TheDiver</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="主要導覽">
+        <button class="nav-button is-active" data-view="home">總覽</button>
+        <button class="nav-button" data-view="forecast">潛水預報</button>
+        <button class="nav-button" data-view="trips">揪潛</button>
+        <button class="nav-button" data-view="essentials">缺一不可</button>
+        <button class="nav-button" data-view="logbook">潛水日誌</button>
+        <button class="nav-button" data-view="map">潛咩</button>
+        <button class="nav-button" data-view="forum">潛伴聊聊</button>
+        <button class="nav-button" data-view="courses">你的潛水課</button>
+        <button class="nav-button" data-view="gear">裝備庫</button>
+        <button class="nav-button" data-view="passport">潛水護照維護</button>
+      </nav>
+      <button id="accountShortcut" class="account-shortcut" type="button" aria-label="開啟會員入口">
+        <span id="accountInitial">潛</span>
+        <span>
+          <strong id="accountNickname">登入</strong>
+          <small id="accountStatus">註冊</small>
+        </span>
+      </button>
+      <button id="logoutButton" class="review-toggle is-hidden-field" type="button">登出</button>
+      <button id="reviewToggle" class="review-toggle is-hidden-field" type="button">註解模式</button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobileNav">選單</button>
+    </header>
+
+    <nav id="mobileNav" class="mobile-nav" aria-label="手機導覽">
+      <button class="nav-button is-active" data-view="home">總覽</button>
+      <button class="nav-button" data-view="forecast">潛水預報</button>
+      <button class="nav-button" data-view="trips">揪潛</button>
+      <button class="nav-button" data-view="essentials">缺一不可</button>
+      <button class="nav-button" data-view="logbook">潛水日誌</button>
+      <button class="nav-button" data-view="map">潛咩</button>
+      <button class="nav-button" data-view="forum">潛伴聊聊</button>
+      <button class="nav-button" data-view="courses">你的潛水課</button>
+      <button class="nav-button" data-view="gear">裝備庫</button>
+      <button class="nav-button" data-view="passport">潛水護照維護</button>
+    </nav>
+
+    <section id="loginModal" class="login-modal" aria-label="會員登入視窗">
+      <div class="login-card">
+        <div class="login-head">
+          <div>
+            <p class="eyebrow">Passport Login</p>
+            <h2>潛水護照登入</h2>
+            <p>登入後可使用數位潛水證、潛水護照與個人化紀錄。</p>
+          </div>
+          <button id="browseAsGuest" class="icon-button" type="button" aria-label="先逛逛">×</button>
+        </div>
+
+        <form id="loginForm" class="login-panel is-active" data-login-panel="login">
+          <label>電子郵件
+            <input id="loginEmail" type="email" placeholder="請輸入註冊電子郵件">
+          </label>
+          <label>密碼
+            <span class="password-field">
+              <input id="loginPassword" type="password" placeholder="請輸入密碼">
+            </span>
+          </label>
+          <label class="show-password"><input type="checkbox" data-password-toggle="loginPassword"> 顯示密碼</label>
+          <button class="primary-action" type="submit">潛水護照登入</button>
+          <div class="login-link-row">
+            <button class="text-link" type="button" data-login-tab="register">註冊潛水護照</button>
+            <button class="text-link" type="button" data-login-tab="forgot">忘記密碼</button>
+          </div>
+        </form>
+
+        <form id="quickRegisterForm" class="login-panel" data-login-panel="register">
+          <h3 class="login-panel-title">潛水護照註冊</h3>
+          <p class="form-note">註冊後系統會寄出電子郵件驗證信。完成驗證後，潛水護照資料會寫入正式會員資料庫。</p>
+          <label>真實姓名
+            <input id="quickRegisterRealName" placeholder="請輸入真實姓名">
+          </label>
+          <label>暱稱
+            <input id="quickRegisterNickname" placeholder="顯示於問候與社群">
+          </label>
+          <label>性別
+            <select id="quickRegisterGender">
+              <option value="">請選擇性別</option>
+              <option>女</option>
+              <option>男</option>
+              <option>非二元</option>
+              <option>不公開</option>
+            </select>
+          </label>
+          <label>電子郵件
+            <input id="quickRegisterEmail" type="email" placeholder="請輸入電子郵件">
+          </label>
+          <label>密碼
+            <span class="password-field">
+              <input id="quickRegisterPassword" type="password" placeholder="至少 8 碼" minlength="8">
+            </span>
+          </label>
+          <label class="show-password"><input type="checkbox" data-password-toggle="quickRegisterPassword"> 顯示密碼</label>
+          <label>身份
+            <select id="quickRegisterRole">
+              <option value="">請選擇身份</option>
+              <option>潛水員</option>
+              <option>潛水教練</option>
+              <option>潛店管理者</option>
+              <option>一般使用者</option>
+            </select>
+          </label>
+          <label class="quick-dive-cert-field">潛水系統
+            <select id="quickRegisterSystem">
+              <option value="">請選擇系統</option>
+              <option>PADI</option>
+              <option>SSI</option>
+              <option>NAUI</option>
+              <option>CMAS</option>
+              <option>SDI/TDI</option>
+              <option>其他</option>
+            </select>
+          </label>
+          <label id="quickOtherSystemField" class="quick-dive-cert-field is-hidden-field">其他潛水系統
+            <input id="quickRegisterOtherSystem" placeholder="請填寫潛水系統名稱">
+          </label>
+          <label class="quick-dive-cert-field">證照等級
+            <select id="quickRegisterLevel">
+              <option value="">請選擇等級</option>
+              <option>Open Water 開放水域潛水員</option>
+              <option>Advanced Open Water 進階開放水域潛水員</option>
+              <option>Rescue Diver 救援潛水員</option>
+              <option>Divemaster 潛水長</option>
+              <option>Instructor 潛水教練</option>
+            </select>
+          </label>
+          <label class="quick-dive-cert-field">潛水證照號碼
+            <input id="quickRegisterCertNo" placeholder="例：PADI-TW-03821">
+          </label>
+          <label class="quick-dive-only-field">潛水經驗（支）
+            <input id="quickRegisterDives" type="number" min="0" placeholder="例：38">
+          </label>
+          <button class="primary-action" type="submit">建立帳號並寄送驗證信</button>
+          <div id="quickVerifyBox" class="verification-actions is-hidden-field">
+            <input id="quickRegisterCode" placeholder="輸入驗證碼">
+            <button id="quickConfirmCode" class="primary-action" type="button">完成註冊</button>
+          </div>
+          <button class="secondary-action compact-action" type="button" data-login-tab="login">返回登入</button>
+        </form>
+
+        <form id="loginRecoveryForm" class="login-panel" data-login-panel="forgot">
+          <label>真實姓名
+            <input id="loginRecoveryName" placeholder="請輸入註冊真實姓名">
+          </label>
+          <label>註冊電子郵件
+            <input id="loginRecoveryEmail" type="email" placeholder="請輸入註冊電子郵件">
+          </label>
+          <button class="primary-action" type="submit">寄送重設密碼信</button>
+          <p class="form-note">正式版不會寄出原密碼。系統會寄送重設密碼連結，請到信箱完成密碼重設。</p>
+          <button class="secondary-action compact-action" type="button" data-login-tab="login">返回登入</button>
+        </form>
+
+        <button id="guestContinue" class="secondary-action compact-action" type="button">先逛逛，稍後再登入</button>
+      </div>
+    </section>
+
+    <main>
+      <section id="home" class="view is-visible">
+        <div class="hero">
+          <img src="assets/diving-hero.jpg" alt="潛水員在台灣海域礁岩上方探索的主視覺">
+          <div class="hero-copy">
+            <p id="memberGreeting" class="member-greeting">Hi, 海晴，今天也保持保守判斷與清楚紀錄。</p>
+            <p class="eyebrow">YOUR GATEWAY TO DIVING SERVICES</p>
+            <h1>潛水人</h1>
+            <p>把潛水護照、日誌、預報、潛點、揪團、課程、裝備、討論與周邊資訊整合到同一個入口。</p>
+            <div class="hero-actions">
+              <button id="heroPassportAction" class="primary-action" type="button">註冊潛水護照</button>
+              <button class="secondary-action" data-view="forecast">查看潛水預報</button>
+            </div>
+          </div>
+          <div class="depth-meter" aria-label="深度視覺標示">
+            <span>0m</span>
+            <span>12m</span>
+            <span>24m</span>
+            <span>36m</span>
+          </div>
+        </div>
+
+        <section class="section-shell overview-middle">
+          <div class="section-heading">
+            <p class="eyebrow">Digital Dive ID</p>
+            <h2>數位潛水證</h2>
+            <p>依潛水護照資料即時顯示會員身份、證照、經驗與勳章，後續可串接正式會員資料庫。</p>
+          </div>
+          <div class="overview-grid">
+            <article class="digital-license">
+              <div class="license-id-row">
+                <span class="license-id-label">潛水ID <strong id="licenseMemberId">尚未核發</strong></span>
+                <div id="overviewBadges" class="overview-badges"></div>
+              </div>
+              <div class="license-top">
+                <div>
+                  <span class="card-label">TheDiver Passport</span>
+                  <h3 id="licenseName">林海晴</h3>
+                  <p id="licenseIdentity">潛水員｜PADI Open Water</p>
+                </div>
+              </div>
+              <div class="license-main">
+                <img id="licenseAvatar" class="license-photo" src="assets/avatar-private.jpg" alt="潛水員大頭照">
+                <dl class="license-data">
+                  <div><dt>證照號碼</dt><dd id="licenseCert">尚未填寫</dd></div>
+                  <div><dt>潛水經驗</dt><dd id="licenseExperience">0 支</dd></div>
+                  <div><dt>上一次潛水日期</dt><dd id="licenseLastDive">尚無紀錄</dd></div>
+                </dl>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">MVP Modules</p>
+            <h2>第一版功能入口</h2>
+            <p>先驗證操作流程與資訊層級，後續再逐步串接會員、海況、地圖、付款與 APP。</p>
+          </div>
+          <div id="moduleGrid" class="module-grid"></div>
+        </section>
+
+        <section class="metrics-strip dynamic-metrics" aria-label="2026 商業目標">
+          <article>
+            <strong><span id="registeredMetric" class="metric-number" data-count="150">0</span></strong>
+            <span>註冊會員數</span>
+          </article>
+          <article>
+            <strong><span id="dailyLoginMetric" class="metric-number" data-count="0">0</span></strong>
+            <span>今日登入人數</span>
+          </article>
+        </section>
+        <footer class="site-footer">
+          <p>氮醉鮪魚潛水俱樂部（N2.Tuna）製作</p>
+          <div class="social-links">
+            <a href="https://www.instagram.com/n2.tuna/" target="_blank" rel="noreferrer" aria-label="開啟 N2.Tuna Instagram">IG</a>
+            <a href="https://www.youtube.com/@%E6%B0%AE%E9%86%89%E9%AE%AA%E9%AD%9A" target="_blank" rel="noreferrer" aria-label="開啟 N2.Tuna YouTube">YT</a>
+          </div>
+        </footer>
+      </section>
+
+      <section id="passport" class="view">
+        <div class="page-grid">
+          <aside class="panel side-panel">
+            <p class="eyebrow">Member Passport</p>
+            <h2>潛水護照</h2>
+            <p>登入後可檢視會員資料。需按下更新按鈕並輸入正確密碼，才可修改資料。</p>
+            <div class="status-stack">
+              <span>資料完整度 <strong id="passportScore">64%</strong></span>
+              <progress id="passportProgress" max="100" value="64"></progress>
+            </div>
+          </aside>
+          <section class="panel">
+            <form id="passportForm" class="form-grid">
+              <label>潛水ID
+                <input id="memberId" readonly placeholder="登入後由系統核發">
+              </label>
+              <label>真實姓名
+                <input id="memberRealName" value="林海晴" required>
+              </label>
+              <label>暱稱
+                <input id="memberNicknameInput" value="海晴" required>
+              </label>
+              <label>性別
+                <select id="memberGender">
+                  <option value="">請選擇性別</option>
+                  <option>女</option>
+                  <option>男</option>
+                  <option>非二元</option>
+                  <option>不公開</option>
+                </select>
+              </label>
+              <label>電子郵件帳號
+                <input id="memberEmail" type="email" placeholder="例：name@example.com" required>
+              </label>
+              <label id="passportPasswordField" class="is-hidden-field">確認密碼
+                <span class="password-field">
+                  <input id="memberPassword" type="password" placeholder="請輸入目前密碼" minlength="8">
+                </span>
+                <span class="show-password"><input type="checkbox" data-password-toggle="memberPassword"> 顯示密碼</span>
+              </label>
+              <label>身份
+                <select id="memberRole">
+                  <option value="">請選擇身份</option>
+                  <option>潛水員</option>
+                  <option>潛水教練</option>
+                  <option>潛店管理者</option>
+                  <option>一般使用者</option>
+                </select>
+              </label>
+              <label class="dive-cert-field">潛水系統
+                <select id="memberSystem">
+                  <option value="">請選擇系統</option>
+                  <option>PADI</option>
+                  <option>SSI</option>
+                  <option>NAUI</option>
+                  <option>CMAS</option>
+                  <option>SDI/TDI</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label id="otherSystemField" class="dive-cert-field hidden-field">其他潛水系統
+                <input id="memberOtherSystem" placeholder="請填寫潛水系統名稱">
+              </label>
+              <label class="dive-cert-field">證照等級
+                <select id="memberLevel">
+                  <option value="">請選擇等級</option>
+                  <option>Open Water 開放水域潛水員</option>
+                  <option>Advanced Open Water 進階開放水域潛水員</option>
+                  <option>Rescue Diver 救援潛水員</option>
+                  <option>Divemaster 潛水長</option>
+                  <option>Instructor 潛水教練</option>
+                </select>
+              </label>
+              <label class="dive-cert-field">潛水證照號碼
+                <input id="memberCertNo" placeholder="例：PADI-TW-03821">
+              </label>
+              <label class="dive-only-field">潛水經驗（支）
+                <input id="memberDives" type="number" min="0" placeholder="例：38">
+              </label>
+              <button id="editPassportButton" class="secondary-action compact-action form-submit" type="button">更新潛水護照資訊</button>
+              <button id="savePassportButton" class="primary-action form-submit is-hidden-field" type="submit">儲存潛水護照資訊</button>
+            </form>
+            <button id="changePasswordToggle" class="secondary-action compact-action password-open-button" type="button">修改密碼</button>
+            <form id="changePasswordForm" class="form-grid password-change-box is-hidden-field">
+              <label>目前密碼
+                <input id="currentPassword" type="password" placeholder="請輸入目前密碼">
+              </label>
+              <label>新密碼
+                <input id="newPassword" type="password" placeholder="請輸入新密碼">
+              </label>
+              <label>再次輸入新密碼
+                <input id="confirmNewPassword" type="password" placeholder="請再次輸入新密碼">
+              </label>
+              <button class="primary-action form-submit" type="submit">完成密碼修改</button>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section id="logbook" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Shared Logbook</p>
+            <h2>潛水日誌</h2>
+            <p>以潛水活動內容為主，紀錄每一支潛水，並暫存到本機後台資料庫原型。</p>
+          </div>
+          <div class="logbook-layout">
+            <form id="logForm" class="panel form-grid">
+              <label>活動日期
+                <input id="logDate" type="date" required>
+              </label>
+              <label>潛水活動
+                <select id="logActivity">
+                  <option>Fun-Dive</option>
+                  <option>潛水訓練（課程）</option>
+                </select>
+              </label>
+              <label>潛水方式
+                <select id="logMethod">
+                  <option>岸潛</option>
+                  <option>船潛</option>
+                </select>
+              </label>
+              <label>是否為夜潛
+                <select id="logNight">
+                  <option>否</option>
+                  <option>是</option>
+                </select>
+              </label>
+              <label>潛點
+                <select id="logSite">
+                  <optgroup label="東北角">
+                    <option>龍洞四季灣</option>
+                    <option>龍洞和美</option>
+                    <option>鼻頭角</option>
+                    <option>潮境公園</option>
+                  </optgroup>
+                  <optgroup label="墾丁">
+                    <option>墾丁合界</option>
+                    <option>後壁湖</option>
+                    <option>萬里桐</option>
+                    <option>出水口</option>
+                  </optgroup>
+                  <optgroup label="小琉球">
+                    <option>花瓶岩</option>
+                    <option>杉福</option>
+                    <option>厚石礁群</option>
+                  </optgroup>
+                  <optgroup label="綠島">
+                    <option>石朗</option>
+                    <option>柴口</option>
+                    <option>公館鼻</option>
+                  </optgroup>
+                  <optgroup label="其他">
+                    <option value="其他">其他（自行填寫）</option>
+                  </optgroup>
+                </select>
+              </label>
+              <label id="logOtherSiteField" class="is-hidden-field">其他潛點名稱
+                <input id="logOtherSite" placeholder="請輸入潛點名稱">
+              </label>
+              <label>潛點類型
+                <select id="logSiteType">
+                  <option>珊瑚礁</option>
+                  <option>斷層</option>
+                  <option>沙地</option>
+                  <option>泥地</option>
+                  <option>巨石</option>
+                  <option>沈船</option>
+                  <option>遺跡</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label>氣源
+                <select id="logGas">
+                  <option>空氣</option>
+                  <option>高氧</option>
+                </select>
+              </label>
+              <label>天氣
+                <select id="logWeather">
+                  <option>晴天</option>
+                  <option>陰天</option>
+                  <option>雨天</option>
+                </select>
+              </label>
+              <label>浪況
+                <select id="logWave">
+                  <option>輕浪（0-1m）</option>
+                  <option>小浪（1-2m）</option>
+                  <option>中浪（2-3m）</option>
+                  <option>大浪（3m以上）</option>
+                </select>
+              </label>
+              <label>潛水時間 min
+                <input id="logMinutes" type="number" min="1" placeholder="例：42">
+              </label>
+              <label>水溫 °C
+                <input id="logWaterTemp" type="number" min="0" max="40" placeholder="例：26">
+              </label>
+              <label>最大深度 m
+                <input id="logDepth" type="number" min="1" step="0.1" placeholder="例：18">
+              </label>
+              <label>能見度 m
+                <input id="logVisibility" type="number" min="0" placeholder="例：8">
+              </label>
+              <label>剩餘氣體壓力 bar
+                <input id="logPressure" type="number" min="0" placeholder="例：70">
+              </label>
+              <label>是否有進減壓
+                <select id="logDeco">
+                  <option>否</option>
+                  <option>是</option>
+                </select>
+              </label>
+              <label>導潛 / 潛伴會員 ID
+                <input id="logBuddyIds" placeholder="例：VC-00001、VX-00025">
+              </label>
+              <label>潛水評分
+                <select id="logRating">
+                  <option value="5">★★★★★ 5 星</option>
+                  <option value="4">★★★★☆ 4 星</option>
+                  <option value="3">★★★☆☆ 3 星</option>
+                  <option value="2">★★☆☆☆ 2 星</option>
+                  <option value="1">★☆☆☆☆ 1 星</option>
+                </select>
+              </label>
+              <label class="wide">觀察紀錄
+                <textarea id="logNote" placeholder="記錄生物、流況、路線、裝備狀況與需要改善的地方。"></textarea>
+              </label>
+              <label class="wide">上傳照片
+                <input id="logPhotos" type="file" accept="image/*" multiple>
+              </label>
+              <button class="primary-action form-submit" type="submit">新增紀錄</button>
+            </form>
+            <div id="logList" class="log-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="forecast" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Dive Forecast</p>
+            <h2>潛水預報</h2>
+            <p>第一版使用模擬資料。正式版需串接中央氣象署、潮汐、浪高與潛點資料。</p>
+          </div>
+          <div class="forecast-toolbar panel">
+            <label>潛點
+              <select id="forecastSite">
+                <optgroup label="東北角">
+                  <option>東北角｜龍洞</option>
+                  <option>東北角｜鼻頭角</option>
+                  <option>東北角｜潮境</option>
+                  <option>東北角｜野柳</option>
+                </optgroup>
+                <optgroup label="南部">
+                  <option>南部｜墾丁合界</option>
+                  <option>南部｜墾丁後壁湖</option>
+                </optgroup>
+                <optgroup label="離島">
+                  <option>離島｜小琉球花瓶岩</option>
+                  <option>離島｜小琉球杉福</option>
+                  <option>離島｜綠島石朗</option>
+                  <option>離島｜綠島柴口</option>
+                  <option>離島｜蘭嶼八代灣</option>
+                  <option>離島｜蘭嶼椰油</option>
+                  <option>離島｜澎湖東吉</option>
+                  <option>離島｜澎湖七美</option>
+                </optgroup>
+              </select>
+            </label>
+            <label>日期
+              <input id="forecastDate" type="date">
+            </label>
+            <button id="forecastButton" class="primary-action" type="button">更新預報</button>
+          </div>
+          <div id="forecastResult" class="forecast-grid"></div>
+          <section class="forecast-source-panel">
+            <div>
+              <span class="source-badge">CWA 模擬</span>
+              <strong>中央氣象署資料層</strong>
+              <p>模擬使用官方天氣、雨量、潮汐、海象與警特報欄位。</p>
+            </div>
+            <div>
+              <span class="source-badge">Windy 模擬</span>
+              <strong>Windy Point Forecast 資料層</strong>
+              <p>模擬使用風速、風向、陣風、浪高、浪向、週期與湧浪欄位。</p>
+            </div>
+            <div>
+              <span class="source-badge">TheDiver 評分</span>
+              <strong>潛點規則與安全降級</strong>
+              <p>警特報優先，再依風、浪、雨、潮汐與潛點暴露度計算適合度。</p>
+            </div>
+          </section>
+          <p class="forecast-note">天氣與海況越接近查詢日期通常越準確，實際出發前仍需再次確認最新預報。</p>
+        </div>
+      </section>
+
+      <section id="map" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">TheDiver Original Diving Map</p>
+            <h2>潛咩</h2>
+            <p>以原創海岸示意圖整理東北角、南部與離島潛點。地圖與路線僅供行前參考，實際下水仍需依當日海況與現場專業人員判斷。</p>
+          </div>
+          <div id="mapRegionFilters" class="filter-bar panel">
+            <button class="filter-button is-active" data-map-region="東北角">東北角</button>
+            <button class="filter-button" data-map-region="南部">南部</button>
+            <button class="filter-button" data-map-region="離島">離島</button>
+          </div>
+          <div class="dive-map-workspace">
+            <section class="original-map-panel">
+              <div class="map-header">
+                <span id="mapRegionTitle">東北角海岸</span>
+                <small>原創示意圖｜非導航圖</small>
+              </div>
+              <div id="originalDiveMap" class="original-dive-map" aria-label="TheDiver 原創潛點示意圖"></div>
+            </section>
+            <aside class="panel map-site-panel">
+              <h3>區域潛點</h3>
+              <div id="siteButtons" class="site-list"></div>
+            </aside>
+            <section id="siteDetail" class="panel site-detail-panel"></section>
+          </div>
+        </div>
+      </section>
+
+      <section id="trips" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Trip Matching</p>
+            <h2>揪潛</h2>
+            <p>提供開團資訊、推薦活動與報名狀態，降低使用者查找時間。</p>
+          </div>
+          <button id="openTripForm" class="primary-action trip-open-button" type="button">發布開團</button>
+          <form id="tripForm" class="panel form-grid is-hidden-field">
+            <label>開團人
+              <input id="tripHost" readonly placeholder="登入後自動帶入暱稱與 ID">
+            </label>
+            <label>開團名稱
+              <input id="tripTitle" placeholder="例：小琉球週末海龜 Fun Dive" required>
+            </label>
+            <label>活動類型
+              <select id="tripType">
+                <option>初階</option>
+                <option>進階</option>
+                <option>攝影</option>
+                <option>訓練</option>
+              </select>
+            </label>
+            <label>活動日期
+              <input id="tripDate" type="date" required>
+            </label>
+            <label>潛點 / 地點
+              <input id="tripPlace" placeholder="例：小琉球" required>
+            </label>
+            <label>名額
+              <input id="tripSlots" placeholder="例：2/6" required>
+            </label>
+            <label>費用
+              <input id="tripPrice" type="number" min="0" inputmode="numeric" placeholder="例：3200" required>
+            </label>
+            <label class="wide">開團說明
+              <textarea id="tripNote" placeholder="說明集合時間、適合等級、裝備需求與注意事項。" required></textarea>
+            </label>
+            <button id="tripSubmitButton" class="primary-action form-submit" type="submit">發布開團</button>
+          </form>
+          <div class="filter-bar panel">
+            <button class="filter-button is-active" data-trip-filter="全部">全部</button>
+            <button class="filter-button" data-trip-filter="初階">初階</button>
+            <button class="filter-button" data-trip-filter="進階">進階</button>
+            <button class="filter-button" data-trip-filter="攝影">攝影</button>
+          </div>
+          <div id="tripList" class="card-grid"></div>
+        </div>
+      </section>
+
+      <section id="courses" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">N2.Tuna CMAS Courses</p>
+            <h2>你的潛水課</h2>
+            <p>從初階技巧到潛水活動領導，依 CMAS 培訓方向整理課程內容。實際課程名稱、資格與發證內容以開課資訊及教練說明為準。</p>
+          </div>
+          <div id="courseStageList" class="course-stage-grid"></div>
+          <div id="courseManagement" class="course-management">
+            <div class="course-management-head">
+            <div>
+              <p class="eyebrow">Course Management</p>
+              <h3>近期開課</h3>
+            </div>
+            <button id="openCourseForm" class="primary-action" type="button">管理者開課</button>
+            </div>
+            <form id="courseForm" class="panel form-grid is-hidden-field">
+            <label>課程名稱
+              <input id="courseTitle" placeholder="例：CMAS 一星潛水員班" required>
+            </label>
+            <label>課程階段
+              <select id="courseStage" required>
+                <option value="">請選擇階段</option>
+                <option>初階</option>
+                <option>進階</option>
+                <option>救援</option>
+                <option>潛水長</option>
+              </select>
+            </label>
+            <label>開始日期
+              <input id="courseStartDate" type="date" required>
+            </label>
+            <label>結束日期
+              <input id="courseEndDate" type="date" required>
+            </label>
+            <label>上課地點
+              <input id="courseLocation" placeholder="例：東北角龍洞" required>
+            </label>
+            <label>名額
+              <input id="courseSeats" type="number" min="1" placeholder="例：6" required>
+            </label>
+            <label>費用
+              <input id="coursePrice" type="number" min="0" placeholder="例：18000" required>
+            </label>
+            <label>教練
+              <input id="courseInstructor" placeholder="例：氮醉鮪魚教練團隊" required>
+            </label>
+            <label class="wide">課程介紹
+              <textarea id="courseDescription" placeholder="說明課程內容、適合對象與訓練重點。" required></textarea>
+            </label>
+            <label class="wide">報名條件與裝備需求
+              <textarea id="courseRequirements" placeholder="例：年滿 15 歲、健康聲明、個人輕裝。"></textarea>
+            </label>
+            <button class="primary-action form-submit" type="submit">發布課程</button>
+            </form>
+          </div>
+          <div id="courseList" class="course-session-grid"></div>
+        </div>
+      </section>
+
+      <section id="gear" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Gear Library</p>
+            <h2>裝備庫</h2>
+            <p>將裝備用途、適合情境與販售連結集中管理，降低新手選購困難。</p>
+          </div>
+          <div class="filter-bar panel">
+            <button class="filter-button is-active" data-gear-filter="全部">全部</button>
+            <button class="filter-button" data-gear-filter="輕裝">輕裝</button>
+            <button class="filter-button" data-gear-filter="重裝">重裝</button>
+            <button class="filter-button" data-gear-filter="安全">安全</button>
+          </div>
+          <div id="gearList" class="card-grid"></div>
+        </div>
+      </section>
+
+      <section id="forum" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Community Board</p>
+            <h2>潛伴聊聊</h2>
+            <p>讓潛水員討論潛點、裝備、課程與活動經驗。正式版需補上檢舉與審核。</p>
+          </div>
+          <div class="forum-mode-tabs panel">
+            <button class="filter-button is-active" type="button" data-forum-mode="posts">查看留言</button>
+            <button class="filter-button" type="button" data-forum-mode="photos">查看水攝分享</button>
+          </div>
+          <div class="forum-action-row">
+            <button id="openPostForm" class="primary-action forum-open-button" type="button">發布留言</button>
+            <button id="openPhotoShareForm" class="primary-action forum-open-button is-hidden-field" type="button">水攝分享</button>
+          </div>
+          <form id="postForm" class="panel form-grid is-hidden-field">
+            <label>主題
+              <select id="postTopic">
+                <option>潛點情報</option>
+                <option>裝備討論</option>
+                <option>揪潛詢問</option>
+                <option>海況回報</option>
+                <option>課程心得</option>
+                <option>潛水安全</option>
+                <option>水下攝影</option>
+                <option>旅遊交通</option>
+                <option>保育觀察</option>
+                <option>新手提問</option>
+              </select>
+            </label>
+            <label>標題
+              <input id="postTitle" placeholder="例：這週末東北角適合新手嗎？">
+            </label>
+            <label class="wide">內容
+              <textarea id="postBody" placeholder="例：想練習下潛與安全停留，請問哪個點比較合適？"></textarea>
+            </label>
+            <button class="primary-action form-submit" type="submit">發布留言</button>
+          </form>
+          <form id="photoShareForm" class="panel form-grid is-hidden-field">
+            <label>水攝標題
+              <input id="photoShareTitle" placeholder="例：綠島海龜與晨光">
+            </label>
+            <label>照片檔案
+              <input id="photoShareFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+            </label>
+            <label class="wide">分享內容
+              <textarea id="photoShareBody" placeholder="例：拍攝地點、海況、相機設定或想分享的觀察。"></textarea>
+            </label>
+            <p class="form-note wide">可上傳 JPG、PNG、WebP，最多 5 張，每張 8MB 以內。MVP 先儲存在本機瀏覽器，正式版再匯入後台資料庫。</p>
+            <button class="primary-action form-submit" type="submit">發布水攝分享</button>
+          </form>
+          <div id="forumTopicPanel" class="filter-bar panel forum-filter-bar">
+            <label>依主題查詢
+              <select id="forumTopicFilter">
+                <option value="全部">全部主題</option>
+                <option>潛點情報</option>
+                <option>裝備討論</option>
+                <option>揪潛詢問</option>
+                <option>海況回報</option>
+                <option>課程心得</option>
+                <option>潛水安全</option>
+                <option>水下攝影</option>
+                <option>旅遊交通</option>
+                <option>保育觀察</option>
+                <option>新手提問</option>
+              </select>
+            </label>
+          </div>
+          <div class="forum-layout">
+            <div id="photoShareList" class="post-list is-hidden-field"></div>
+            <div id="postList" class="post-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="essentials" class="view">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Local Essentials</p>
+            <h2>缺一不可</h2>
+            <p>先預約裝備與氣瓶配送，並查詢常用潛點停車資訊，讓出發前的準備更清楚。</p>
+          </div>
+          <div class="reservation-service-grid">
+            <button class="reservation-service is-active" type="button" data-reservation-type="潛水裝備">
+              <strong>潛水裝備預約</strong><span>一次填完整套租借需求</span>
+            </button>
+            <button class="reservation-service" type="button" data-reservation-type="氣瓶預約配送">
+              <strong>氣瓶預約配送</strong><span>蝙蝠洞配送與費用試算</span>
+            </button>
+            <button class="reservation-service" type="button" data-reservation-type="停車資訊">
+              <strong>停車資訊</strong><span>龍洞灣與蝙蝠洞停車查詢</span>
+            </button>
+          </div>
+          <form id="reservationForm" class="panel form-grid reservation-form">
+            <label>預約會員
+              <input id="reservationMember" readonly>
+            </label>
+            <label class="reservation-field" data-types="潛水裝備">預約裝備使用日期
+              <input id="equipmentDate" type="date">
+            </label>
+            <label class="reservation-field" data-types="潛水裝備">預計使用時間
+              <input id="equipmentTime" type="time">
+            </label>
+            <label class="reservation-field" data-types="潛水裝備">合作店家
+              <select id="equipmentVendor">
+                <option>東北角坤成潛水</option>
+              </select>
+            </label>
+            <fieldset class="reservation-field checkbox-field equipment-pick-list wide" data-types="潛水裝備">
+              <legend>本次需要租借的裝備</legend>
+              <label><input id="rentGearMask" type="checkbox" value="面鏡"> 面鏡</label>
+              <label><input id="rentGearWetsuit" type="checkbox" value="防寒衣"> 防寒衣</label>
+              <label><input id="rentGearBoots" type="checkbox" value="套鞋"> 套鞋</label>
+              <label><input id="rentGearFins" type="checkbox" value="蛙鞋"> 蛙鞋</label>
+              <label><input id="rentGearBcd" type="checkbox" value="BCD"> BCD</label>
+              <label><input id="rentGearRegulator" type="checkbox" value="調節器"> 調節器</label>
+              <label><input id="rentGearWeights" type="checkbox" value="配重"> 配重</label>
+            </fieldset>
+            <label class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="mask">面鏡是否要有度數
+              <select id="gearMaskPrescription">
+                <option>否</option>
+                <option>是</option>
+              </select>
+            </label>
+            <label id="maskDegreeField" class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="mask">度數面鏡需求（左／右眼同度數）
+              <input id="gearMaskDegree" type="number" step="0.25" placeholder="例：-3.00">
+            </label>
+            <label class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="wetsuit">防寒衣款式
+              <select id="gearWetsuitStyle">
+                <option>男款</option>
+                <option>女款</option>
+              </select>
+            </label>
+            <label class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="wetsuit">防寒衣尺寸
+              <select id="gearWetsuitSize">
+                <option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option><option>2XL</option><option>其他</option>
+              </select>
+            </label>
+            <label class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="boots">套鞋尺寸（整數公分）
+              <input id="gearBootsSize" type="number" min="18" max="35" step="1" placeholder="例：26">
+            </label>
+            <label class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="fins">蛙鞋尺寸
+              <select id="gearFinsSize">
+                <option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option><option>2XL</option>
+              </select>
+            </label>
+            <label class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="bcd">BCD 尺寸
+              <select id="gearBcdSize">
+                <option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option><option>2XL</option><option>其他</option>
+              </select>
+            </label>
+            <div class="reservation-field equipment-detail equipment-fixed-count is-hidden-field" data-types="潛水裝備" data-gear-detail="regulator">
+              <span>調節器數量</span>
+              <strong>1 組</strong>
+            </div>
+            <label class="reservation-field equipment-detail is-hidden-field" data-types="潛水裝備" data-gear-detail="weights">配重需求（公斤）
+              <input id="gearWeightsKg" type="number" min="1" max="30" step="0.5" placeholder="例：4">
+            </label>
+            <label class="reservation-field" data-types="潛水裝備">身高（cm）
+              <input id="renterHeight" type="number" min="120" max="220" placeholder="例：170">
+            </label>
+            <label class="reservation-field" data-types="潛水裝備">體重（kg）
+              <input id="renterWeight" type="number" min="30" max="160" placeholder="例：65">
+            </label>
+            <label class="reservation-field" data-types="氣瓶預約配送">配送日期
+              <input id="gasDeliveryDate" type="date">
+            </label>
+            <label class="reservation-field" data-types="氣瓶預約配送">預計使用時段
+              <input id="gasUseTime" type="time">
+            </label>
+            <label class="reservation-field" data-types="氣瓶預約配送">配送地點
+              <select id="gasDeliveryPlace">
+                <option>蝙蝠洞</option>
+              </select>
+            </label>
+            <label class="reservation-field" data-types="氣瓶預約配送">空氣大支氣瓶
+              <input id="airLargeCount" type="number" min="0" value="0">
+            </label>
+            <label class="reservation-field" data-types="氣瓶預約配送">空氣小支氣瓶
+              <input id="airSmallCount" type="number" min="0" value="0">
+            </label>
+            <label class="reservation-field" data-types="氣瓶預約配送">高氧大支氣瓶
+              <input id="nitroxLargeCount" type="number" min="0" value="0">
+            </label>
+            <label class="reservation-field" data-types="氣瓶預約配送">高氧小支氣瓶
+              <input id="nitroxSmallCount" type="number" min="0" value="0">
+            </label>
+            <div class="reservation-field gas-total-box" data-types="氣瓶預約配送">
+              <span id="gasTotalBreakdown">空氣 0 支 NT$ 0｜高氧 0 支 NT$ 0</span>
+              <strong id="gasTotalFee">NT$ 0</strong>
+              <small>空氣 NT$200／支，高氧 NT$400／支；大支與小支目前同價。</small>
+            </div>
+            <label class="wide">備註
+              <textarea id="reservationNote" placeholder="可填寫特殊尺寸、配送聯絡方式或其他準備需求。"></textarea>
+            </label>
+            <button class="primary-action form-submit" type="submit">送出預約需求</button>
+          </form>
+          <div id="parkingInfoPanel" class="parking-info-grid is-hidden-field"></div>
+          <div class="reservation-list-head">
+            <div><p class="eyebrow">Reservation Records</p><h3>我的預約</h3></div>
+            <div class="reservation-actions">
+              <button id="copyReservationSummary" class="secondary-action compact-action" type="button">複製店家備貨摘要</button>
+              <button id="exportReservationJson" class="secondary-action compact-action is-hidden-field" type="button">匯出預約 JSON</button>
+            </div>
+          </div>
+          <div id="reservationList" class="reservation-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <aside id="reviewPanel" class="review-panel" aria-label="功能註解面板" aria-hidden="true">
+      <div class="review-header">
+        <div>
+          <p class="eyebrow">Review Notes</p>
+          <h2>功能註解</h2>
+        </div>
+        <button id="reviewClose" class="icon-button" type="button" aria-label="關閉註解面板">×</button>
+      </div>
+
+      <form id="reviewForm" class="review-form">
+        <label>對應功能
+          <select id="reviewModule"></select>
+        </label>
+        <label>優先度
+          <select id="reviewPriority">
+            <option value="P1">P1 立即修正</option>
+            <option value="P2">P2 下一輪修正</option>
+            <option value="P3">P3 可排入優化</option>
+          </select>
+        </label>
+        <label>修改方案註解
+          <textarea id="reviewText" placeholder="例：潛水預報頁需要把浪高放在第一排，並增加適不適合新手的判斷。"></textarea>
+        </label>
+        <div class="review-actions">
+          <button class="primary-action" type="submit">儲存註解</button>
+          <button id="reviewExport" class="secondary-action compact-action" type="button">複製全部</button>
+        </div>
+      </form>
+
+      <section>
+        <h3>目前註解</h3>
+        <div id="reviewList" class="review-list"></div>
+      </section>
+    </aside>
+    <div id="reviewBackdrop" class="review-backdrop" hidden></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-service.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
